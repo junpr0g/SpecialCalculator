@@ -6,6 +6,7 @@ public partial class MainPage : ContentPage
 {
     private const decimal VatRate = 0.255m;
     private const double TwoColumnBreakpoint = 980;
+    private const double DropdownRowHeight = 44;
     private readonly CultureInfo _fiCulture = CultureInfo.GetCultureInfo("fi-FI");
     private readonly List<RateOption> _hourlyRates =
     [
@@ -45,10 +46,72 @@ public partial class MainPage : ContentPage
 
     private void InitializeDropdowns()
     {
-        HourlyOptionsView.ItemsSource = _hourlyRates;
-        MileageOptionsView.ItemsSource = _mileageRates;
+        BuildDropdownOptions(HourlyOptionsPanel, _hourlyRates, SelectHourlyOption);
+        BuildDropdownOptions(MileageOptionsPanel, _mileageRates, SelectMileageOption);
         HourlySelectedLabel.Text = _hourlyRates[_selectedHourlyIndex].Label;
         MileageSelectedLabel.Text = _mileageRates[_selectedMileageIndex].Label;
+    }
+
+    private static void BuildDropdownOptions(
+        VerticalStackLayout panel,
+        IReadOnlyList<RateOption> rates,
+        Action<RateOption> onSelected)
+    {
+        panel.Children.Clear();
+
+        foreach (RateOption rate in rates)
+        {
+            var row = new Grid
+            {
+                Padding = new Thickness(14, 10),
+                BackgroundColor = Color.FromArgb("#F2F8F2"),
+                HeightRequest = DropdownRowHeight
+            };
+
+            row.Children.Add(new Label
+            {
+                Text = rate.Label,
+                TextColor = Color.FromArgb("#0E3726"),
+                FontSize = 14,
+                VerticalOptions = LayoutOptions.Center
+            });
+
+            var tap = new TapGestureRecognizer();
+            RateOption captured = rate;
+            tap.Tapped += (_, _) => onSelected(captured);
+            row.GestureRecognizers.Add(tap);
+            panel.Children.Add(row);
+        }
+    }
+
+    private void DismissKeyboard()
+    {
+        if (HoursEntry.IsFocused)
+        {
+            HoursEntry.Unfocus();
+        }
+
+        if (KilometersEntry.IsFocused)
+        {
+            KilometersEntry.Unfocus();
+        }
+
+#if ANDROID
+        var activity = Platform.CurrentActivity;
+        if (activity?.CurrentFocus is Android.Views.View focusView)
+        {
+            var inputManager = (Android.Views.InputMethods.InputMethodManager?)
+                activity.GetSystemService(Android.Content.Context.InputMethodService);
+            inputManager?.HideSoftInputFromWindow(
+                focusView.WindowToken,
+                Android.Views.InputMethods.HideSoftInputFlags.None);
+            focusView.ClearFocus();
+        }
+#endif
+
+#if IOS || MACCATALYST
+        UIKit.UIApplication.SharedApplication?.KeyWindow?.EndEditing(true);
+#endif
     }
 
     private void ApplyResponsiveLayout(double width)
@@ -92,27 +155,23 @@ public partial class MainPage : ContentPage
 
     private void OnHourlyDropdownTapped(object? sender, EventArgs e)
     {
+        DismissKeyboard();
         MileageOptionsBorder.IsVisible = false;
         HourlyOptionsBorder.IsVisible = !HourlyOptionsBorder.IsVisible;
     }
 
     private void OnMileageDropdownTapped(object? sender, EventArgs e)
     {
+        DismissKeyboard();
         HourlyOptionsBorder.IsVisible = false;
         MileageOptionsBorder.IsVisible = !MileageOptionsBorder.IsVisible;
     }
 
-    private void OnHourlySelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void SelectHourlyOption(RateOption selected)
     {
-        if (e.CurrentSelection.FirstOrDefault() is not RateOption selected)
-        {
-            return;
-        }
-
         _selectedHourlyIndex = _hourlyRates.IndexOf(selected);
         HourlySelectedLabel.Text = selected.Label;
         HourlyOptionsBorder.IsVisible = false;
-        HourlyOptionsView.SelectedItem = null;
         CalculateAndRender();
     }
 
@@ -126,27 +185,21 @@ public partial class MainPage : ContentPage
         HoursEntry.Text = string.Empty;
         KilometersEntry.Text = string.Empty;
         _selectedHourlyIndex = 0;
-        _selectedMileageIndex = 1;        
+        _selectedMileageIndex = 1;
+        HourlySelectedLabel.Text = _hourlyRates[_selectedHourlyIndex].Label;
+        MileageSelectedLabel.Text = _mileageRates[_selectedMileageIndex].Label;
         HourlyOptionsBorder.IsVisible = false;
         MileageOptionsBorder.IsVisible = false;
-        HourlyOptionsView.SelectedItem = null;
-        MileageOptionsView.SelectedItem = null;
         ValidationLabel.Text = string.Empty;
         ValidationLabel.IsVisible = false;
         CalculateAndRender();
     }
 
-    private void OnMileageSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void SelectMileageOption(RateOption selected)
     {
-        if (e.CurrentSelection.FirstOrDefault() is not RateOption selected)
-        {
-            return;
-        }
-
         _selectedMileageIndex = _mileageRates.IndexOf(selected);
         MileageSelectedLabel.Text = selected.Label;
         MileageOptionsBorder.IsVisible = false;
-        MileageOptionsView.SelectedItem = null;
         CalculateAndRender();
     }
 

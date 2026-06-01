@@ -184,20 +184,8 @@
                                         BackgroundColor="#F2F8F2"
                                         IsVisible="False"
                                         x:Name="HourlyOptionsBorder">
-                                    <CollectionView x:Name="HourlyOptionsView"
-                                                    HeightRequest="220"
-                                                    SelectionMode="Single"
-                                                    SelectionChanged="OnHourlySelectionChanged">
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Padding="14,10"
-                                                      BackgroundColor="#F2F8F2">
-                                                    <Label Text="{Binding Label}"
-                                                           Style="{StaticResource DropdownOptionTextStyle}" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>
+                                    <VerticalStackLayout x:Name="HourlyOptionsPanel"
+                                                         Spacing="0" />
                                 </Border>
                             </Grid>
                         </Border>
@@ -227,20 +215,8 @@
                                         BackgroundColor="#F2F8F2"
                                         IsVisible="False"
                                         x:Name="MileageOptionsBorder">
-                                    <CollectionView x:Name="MileageOptionsView"
-                                                    HeightRequest="180"
-                                                    SelectionMode="Single"
-                                                    SelectionChanged="OnMileageSelectionChanged">
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Padding="14,10"
-                                                      BackgroundColor="#F2F8F2">
-                                                    <Label Text="{Binding Label}"
-                                                           Style="{StaticResource DropdownOptionTextStyle}" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>
+                                    <VerticalStackLayout x:Name="MileageOptionsPanel"
+                                                         Spacing="0" />
                                 </Border>
                             </Grid>
                         </Border>
