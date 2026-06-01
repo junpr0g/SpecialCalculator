@@ -67,7 +67,69 @@
                   RowDefinitions="Auto,Auto"
                   ColumnSpacing="12"
                   RowSpacing="12">
+                <Border x:Name="ResultsCard"
+                        Grid.Row="0"
+                        BackgroundColor="White"
+                        Stroke="#CEDDCE"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Laskelman erittely"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#1F5A3B" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Työ (alv 0 %)" TextColor="#1F5A3B" />
+                            <Label x:Name="WorkValueLabel"
+                   Grid.Column="1"
+                   FontAttributes="Bold"
+                   TextColor="#1F5A3B"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Matka (alv 0 %)" TextColor="#1F5A3B" />
+                            <Label x:Name="TravelValueLabel"
+                   Grid.Column="1"
+                   FontAttributes="Bold" 
+                   TextColor="#1F5A3B"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Subtotal (alv 0 %)" TextColor="#1F5A3B"/>
+                            <Label x:Name="SubtotalValueLabel"
+                   Grid.Column="1"
+                   FontAttributes="Bold"
+                   TextColor="#1F5A3B"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="ALV (25,5 %)" TextColor="#1F5A3B"/>
+                            <Label x:Name="VatValueLabel"
+                   Grid.Column="1"
+                   FontAttributes="Bold"
+                   TextColor="#1F5A3B"/>
+                        </Grid>
+
+                        <Border BackgroundColor="#E8F0E8"
+                StrokeShape="RoundRectangle 10"
+                Padding="12"
+                Margin="0,8,0,0">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="YHTEENSÄ"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#1F5A3B" />
+                                <Label x:Name="TotalValueLabel"
+                       Grid.Column="1"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="#1F5A3B" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
                 <Border x:Name="InputCard"
+                        Grid.Row="1"
                         BackgroundColor="#E8F0E8"
                         Stroke="#CEDDCE"
                         StrokeThickness="1"
@@ -105,6 +167,7 @@
                                         IsVisible="False"
                                         x:Name="HourlyOptionsBorder">
                                     <CollectionView x:Name="HourlyOptionsView"
+                                                    HeightRequest="220"
                                                     SelectionMode="Single"
                                                     SelectionChanged="OnHourlySelectionChanged">
                                         <CollectionView.ItemTemplate>
@@ -147,6 +210,7 @@
                                         IsVisible="False"
                                         x:Name="MileageOptionsBorder">
                                     <CollectionView x:Name="MileageOptionsView"
+                                                    HeightRequest="180"
                                                     SelectionMode="Single"
                                                     SelectionChanged="OnMileageSelectionChanged">
                                         <CollectionView.ItemTemplate>
@@ -208,66 +272,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Border x:Name="ResultsCard"
-                        Grid.Row="1"
-                        BackgroundColor="White"
-                        Stroke="#CEDDCE"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 14"
-                        Padding="16">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Laskelman erittely"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="#1F5A3B" />
 
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Työ (alv 0 %)" TextColor="#1F5A3B" />
-                            <Label x:Name="WorkValueLabel"
-                                   Grid.Column="1"
-                                   FontAttributes="Bold"
-                                   TextColor="#1F5A3B"/>
-                        </Grid>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Matka (alv 0 %)" TextColor="#1F5A3B" />
-                            <Label x:Name="TravelValueLabel"
-                                   Grid.Column="1"
-                                   FontAttributes="Bold" 
-                                   TextColor="#1F5A3B"/>
-                        </Grid>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Subtotal (alv 0 %)" TextColor="#1F5A3B"/>
-                            <Label x:Name="SubtotalValueLabel"
-                                   Grid.Column="1"
-                                   FontAttributes="Bold"
-                                   TextColor="#1F5A3B"/>
-                        </Grid>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="ALV (25,5 %)" TextColor="#1F5A3B"/>
-                            <Label x:Name="VatValueLabel"
-                                   Grid.Column="1"
-                                   FontAttributes="Bold"
-                                   TextColor="#1F5A3B"/>
-                        </Grid>
-
-                        <Border BackgroundColor="#E8F0E8"
-                                StrokeShape="RoundRectangle 10"
-                                Padding="12"
-                                Margin="0,8,0,0">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="YHTEENSÄ"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       TextColor="#1F5A3B" />
-                                <Label x:Name="TotalValueLabel"
-                                       Grid.Column="1"
-                                       FontSize="28"
-                                       FontAttributes="Bold"
-                                       TextColor="#1F5A3B" />
-                            </Grid>
-                        </Border>
-                    </VerticalStackLayout>
-                </Border>
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

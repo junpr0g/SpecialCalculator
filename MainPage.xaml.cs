@@ -64,13 +64,13 @@ public partial class MainPage : ContentPage
             CardsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
             CardsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
-            Grid.SetColumn(InputCard, 0);
-            Grid.SetRow(InputCard, 0);
-            Grid.SetColumnSpan(InputCard, 1);
-
-            Grid.SetColumn(ResultsCard, 1);
+            Grid.SetColumn(ResultsCard, 0);
             Grid.SetRow(ResultsCard, 0);
             Grid.SetColumnSpan(ResultsCard, 1);
+
+            Grid.SetColumn(InputCard, 1);
+            Grid.SetRow(InputCard, 0);
+            Grid.SetColumnSpan(InputCard, 1);
         }
         else
         {
@@ -78,13 +78,13 @@ public partial class MainPage : ContentPage
             CardsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
             CardsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
-            Grid.SetColumn(InputCard, 0);
-            Grid.SetRow(InputCard, 0);
-            Grid.SetColumnSpan(InputCard, 1);
-
             Grid.SetColumn(ResultsCard, 0);
-            Grid.SetRow(ResultsCard, 1);
+            Grid.SetRow(ResultsCard, 0);
             Grid.SetColumnSpan(ResultsCard, 1);
+
+            Grid.SetColumn(InputCard, 0);
+            Grid.SetRow(InputCard, 1);
+            Grid.SetColumnSpan(InputCard, 1);
         }
 
         _isTwoColumnLayout = shouldUseTwoColumns;
