@@ -136,10 +136,28 @@
                         StrokeShape="RoundRectangle 14"
                         Padding="16">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Syötä tiedot"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="#1F5A3B" />
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="12">
+                            <Label Text="Syötä tiedot"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#1F5A3B"
+                                   VerticalOptions="Center" />
+                            <Button Grid.Column="1"
+                                    Text="Tyhjennä"
+                                    Clicked="OnResetClicked"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#1F5A3B"
+                                    BorderColor="#2F6B4A"
+                                    BorderWidth="1"
+                                    CornerRadius="8"
+                                    HeightRequest="36"
+                                    FontSize="13"
+                                    Padding="12,0"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="End"
+                                    SemanticProperties.Hint="Tyhjentää syötetyt arvot ja palauttaa oletukset" />
+                        </Grid>
 
                         <Label Text="Valitse työtyyppi"
                                FontSize="14"
@@ -227,42 +245,37 @@
                             </Grid>
                         </Border>
 
-                        <Label Text="Työtunnit (h)"
-                               FontSize="14"
-                               FontAttributes="Bold"
-                               TextColor="#2F4736" />
-                        <Border Style="{StaticResource InputBorderStyle}">
-                            <Entry x:Name="HoursEntry"
-                                   Placeholder="0"
-                                   Style="{StaticResource InputEntryStyle}"
-                                   Keyboard="Numeric"
-                                   TextChanged="OnTextChanged" />
-                        </Border>
-
-                        <Label Text="Ajokilometrit (km)"
-                               FontSize="14"
-                               FontAttributes="Bold"
-                               TextColor="#2F4736" />
-                        <Border Style="{StaticResource InputBorderStyle}">
-                            <Entry x:Name="KilometersEntry"
-                                   Placeholder="0"
-                                   Style="{StaticResource InputEntryStyle}"
-                                   Keyboard="Numeric"
-                                   TextChanged="OnTextChanged" />
-                        </Border>
-
-                        <Button Text="Tyhjennä"
-                                Clicked="OnResetClicked"
-                                BackgroundColor="Transparent"
-                                TextColor="#1F5A3B"
-                                BorderColor="#2F6B4A"
-                                BorderWidth="1"
-                                CornerRadius="8"
-                                HeightRequest="40"
-                                FontSize="13"
-                                Padding="12,0"
-                                HorizontalOptions="Start"
-                                SemanticProperties.Hint="Tyhjentää syötetyt arvot ja palauttaa oletukset" />
+                        <Grid ColumnDefinitions="*,*"
+                              ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0"
+                                                 Spacing="6">
+                                <Label Text="Työtunnit (h)"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="#2F4736" />
+                                <Border Style="{StaticResource InputBorderStyle}">
+                                    <Entry x:Name="HoursEntry"
+                                           Placeholder="0"
+                                           Style="{StaticResource InputEntryStyle}"
+                                           Keyboard="Numeric"
+                                           TextChanged="OnTextChanged" />
+                                </Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Spacing="6">
+                                <Label Text="Ajokilometrit (km)"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="#2F4736" />
+                                <Border Style="{StaticResource InputBorderStyle}">
+                                    <Entry x:Name="KilometersEntry"
+                                           Placeholder="0"
+                                           Style="{StaticResource InputEntryStyle}"
+                                           Keyboard="Numeric"
+                                           TextChanged="OnTextChanged" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
 
                         <Label x:Name="ValidationLabel"
                                TextColor="#B42318"

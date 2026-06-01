@@ -126,9 +126,7 @@ public partial class MainPage : ContentPage
         HoursEntry.Text = string.Empty;
         KilometersEntry.Text = string.Empty;
         _selectedHourlyIndex = 0;
-        _selectedMileageIndex = 1;
-        HourlySelectedLabel.Text = _hourlyRates[_selectedHourlyIndex].Label;
-        MileageSelectedLabel.Text = _mileageRates[_selectedMileageIndex].Label;
+        _selectedMileageIndex = 1;        
         HourlyOptionsBorder.IsVisible = false;
         MileageOptionsBorder.IsVisible = false;
         HourlyOptionsView.SelectedItem = null;
