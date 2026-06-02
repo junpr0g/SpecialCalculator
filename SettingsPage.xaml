@@ -12,19 +12,34 @@
                     StrokeShape="RoundRectangle 14"
                     Padding="16">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Ylläpito / Asetukset"
+                    <Label x:Name="AdminTitleLabel"
+                           Text="Ylläpito / Asetukset"
                            FontSize="20"
                            FontAttributes="Bold"
                            TextColor="#1F5A3B" />
+                    <Button x:Name="OpenAppSettingsButton"
+                            Text="Sovellusasetukset"
+                            Clicked="OnOpenAppSettingsClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="#1F5A3B"
+                            BorderColor="#2F6B4A"
+                            BorderWidth="1"
+                            CornerRadius="8"
+                            HeightRequest="36"
+                            FontSize="13"
+                            Padding="12,0"
+                            HorizontalOptions="Start" />
 
-                    <Label Text="Työhinnat (alv 0 % / h)"
+                    <Label x:Name="HourlyRatesLabel"
+                           Text="Työhinnat (alv 0 % / h)"
                            FontSize="14"
                            FontAttributes="Bold"
                            TextColor="#2F4736" />
                     <VerticalStackLayout x:Name="HourlySettingsRows"
                                          Spacing="8" />
 
-                    <Label Text="Matkahinnat (alv 0 % / km)"
+                    <Label x:Name="MileageRatesLabel"
+                           Text="Matkahinnat (alv 0 % / km)"
                            FontSize="14"
                            FontAttributes="Bold"
                            TextColor="#2F4736"
@@ -32,7 +47,8 @@
                     <VerticalStackLayout x:Name="MileageSettingsRows"
                                          Spacing="8" />
 
-                    <Label Text="ALV (%)"
+                    <Label x:Name="VatPercentLabel"
+                           Text="ALV (%)"
                            FontSize="14"
                            FontAttributes="Bold"
                            TextColor="#2F4736"
@@ -55,7 +71,8 @@
                     <Grid ColumnDefinitions="Auto,Auto,*"
                           ColumnSpacing="10"
                           Margin="0,10,0,0">
-                        <Button Text="Tallenna"
+                        <Button x:Name="SaveRatesButton"
+                                Text="Tallenna"
                                 Clicked="OnSaveSettingsClicked"
                                 BackgroundColor="#1F5A3B"
                                 TextColor="White"
@@ -63,7 +80,8 @@
                                 HeightRequest="38"
                                 FontSize="13"
                                 Padding="14,0" />
-                        <Button Grid.Column="1"
+                        <Button x:Name="ResetDefaultsButton"
+                                Grid.Column="1"
                                 Text="Palauta oletukset"
                                 Clicked="OnResetDefaultsClicked"
                                 BackgroundColor="Transparent"

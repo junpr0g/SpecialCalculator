@@ -17,8 +17,21 @@ public partial class SettingsPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        ApplyLocalization();
         _settings = CalculatorSettingsStore.Load();
         BuildInputs();
+    }
+
+    private void ApplyLocalization()
+    {
+        Title = LocalizationService.T("settings");
+        AdminTitleLabel.Text = LocalizationService.T("admin_settings_title");
+        OpenAppSettingsButton.Text = LocalizationService.T("app_settings");
+        HourlyRatesLabel.Text = LocalizationService.T("hourly_rates");
+        MileageRatesLabel.Text = LocalizationService.T("mileage_rates");
+        VatPercentLabel.Text = $"{LocalizationService.T("vat_label")} (%)";
+        SaveRatesButton.Text = LocalizationService.T("save");
+        ResetDefaultsButton.Text = LocalizationService.T("reset_defaults");
     }
 
     private void BuildInputs()
@@ -95,7 +108,7 @@ public partial class SettingsPage : ContentPage
         }
 
         CalculatorSettingsStore.Save(updated!);
-        SettingsValidationLabel.Text = "Tallennettu.";
+        SettingsValidationLabel.Text = LocalizationService.T("saved");
         SettingsValidationLabel.IsVisible = true;
         await Task.Delay(300);
         await Shell.Current.GoToAsync("..");
@@ -106,8 +119,13 @@ public partial class SettingsPage : ContentPage
         CalculatorSettingsStore.ResetToDefaults();
         _settings = CalculatorSettingsStore.Clone(CalculatorSettingsStore.Defaults);
         BuildInputs();
-        SettingsValidationLabel.Text = "Oletusarvot palautettu.";
+        SettingsValidationLabel.Text = LocalizationService.T("defaults_restored");
         SettingsValidationLabel.IsVisible = true;
+    }
+
+    private async void OnOpenAppSettingsClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(AppSettingsPage));
     }
 
     private bool TryCollectSettings(out CalculatorSettings? settings, out string validation)

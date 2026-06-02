@@ -16,6 +16,7 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        ApplyLocalization();
         ReloadSettingsFromStore();
         ApplyResponsiveLayout(Width);
         CalculateAndRender();
@@ -24,8 +25,27 @@ public partial class MainPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        ApplyLocalization();
         ReloadSettingsFromStore();
         CalculateAndRender();
+    }
+
+    private void ApplyLocalization()
+    {
+        HeaderTitleLabel.Text = LocalizationService.T("header_title");
+        HeaderSubtitleLabel.Text = LocalizationService.T("header_subtitle");
+        OpenSettingsButton.Text = LocalizationService.T("settings");
+        ResultsTitleLabel.Text = LocalizationService.T("results_title");
+        WorkCaptionLabel.Text = LocalizationService.T("work_net");
+        TravelCaptionLabel.Text = LocalizationService.T("travel_net");
+        SubtotalCaptionLabel.Text = LocalizationService.T("subtotal_net");
+        TotalCaptionLabel.Text = LocalizationService.T("total");
+        InputTitleLabel.Text = LocalizationService.T("input_title");
+        ClearInputsButton.Text = LocalizationService.T("clear");
+        WorkTypeLabel.Text = LocalizationService.T("select_work");
+        TravelTypeLabel.Text = LocalizationService.T("select_travel");
+        HoursInputLabel.Text = LocalizationService.T("hours");
+        KilometersInputLabel.Text = LocalizationService.T("kilometers");
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -121,7 +141,8 @@ public partial class MainPage : ContentPage
     {
         HourlySelectedLabel.Text = BuildHeaderLabel(_hourlyRates[_selectedHourlyIndex], "h");
         MileageSelectedLabel.Text = BuildHeaderLabel(_mileageRates[_selectedMileageIndex], "km");
-        VatCaptionLabel.Text = $"ALV ({_vatPercent.ToString("0.##", _fiCulture)} %)";
+        string vatToken = LocalizationService.T("vat_label");
+        VatCaptionLabel.Text = $"{vatToken} ({_vatPercent.ToString("0.##", _fiCulture)} %)";
     }
 
     private static string BuildHeaderLabel(RateItem rate, string unit)
