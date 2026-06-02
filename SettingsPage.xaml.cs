@@ -1,40 +1,364 @@
 using System.Globalization;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace SpecialCalculator;
 
 public partial class SettingsPage : ContentPage
 {
+    private const int AdminTabIndex = 0;
+    private const int AppTabIndex = 1;
+
     private readonly CultureInfo _fiCulture = CultureInfo.GetCultureInfo("fi-FI");
     private readonly Dictionary<string, Entry> _hourlyEntries = [];
     private readonly Dictionary<string, Entry> _mileageEntries = [];
+
     private CalculatorSettings _settings = CalculatorSettingsStore.Clone(CalculatorSettingsStore.Defaults);
+    private bool _suppressCarouselSync;
+    private bool _carouselInitialized;
+
+    private Entry? _vatSettingsEntry;
+    private Label? _adminStatusLabel;
+    private Picker? _languagePicker;
+    private Picker? _themePicker;
+    private Switch? _notificationsSwitch;
+    private Label? _appStatusLabel;
 
     public SettingsPage()
     {
         InitializeComponent();
+        UpdateTabVisualState(AdminTabIndex);
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        AppThemeService.ThemeChanged += OnAppThemeChanged;
+        AppThemeService.ApplySavedTheme();
+        RebuildCarousel();
+    }
+
+    protected override void OnDisappearing()
+    {
+        AppThemeService.ThemeChanged -= OnAppThemeChanged;
+        base.OnDisappearing();
+    }
+
+    private void OnAppThemeChanged(object? sender, EventArgs e)
+    {
+        MainThread.BeginInvokeOnMainThread(RebuildCarousel);
+    }
+
+    private void RebuildCarousel()
+    {
+        int position = _carouselInitialized ? SettingsCarousel.Position : AdminTabIndex;
+        _carouselInitialized = false;
+        _vatSettingsEntry = null;
+        _adminStatusLabel = null;
+        _languagePicker = null;
+        _themePicker = null;
+        _notificationsSwitch = null;
+        _appStatusLabel = null;
+        SettingsCarousel.ItemsSource = null;
+        EnsureCarouselInitialized();
+        SettingsCarousel.Position = position;
         ApplyLocalization();
         _settings = CalculatorSettingsStore.Load();
-        BuildInputs();
+        BuildAdminInputs();
+        BuildAppPickers();
+        UpdateTabVisualState(position);
     }
+
+    private void EnsureCarouselInitialized()
+    {
+        if (_carouselInitialized)
+        {
+            return;
+        }
+
+        SettingsCarousel.ItemTemplate = new DataTemplate(() =>
+        {
+            ContentView host = new();
+            host.SetBinding(ContentView.ContentProperty, ".");
+            return host;
+        });
+        SettingsCarousel.ItemsSource = new List<View>
+        {
+            CreateAdminPanel(),
+            CreateAppPanel()
+        };
+        SettingsCarousel.Position = AdminTabIndex;
+        _carouselInitialized = true;
+    }
+
+    private ScrollView CreateAdminPanel()
+    {
+        var hourlyRows = new VerticalStackLayout { Spacing = 8 };
+        var mileageRows = new VerticalStackLayout { Spacing = 8 };
+
+        _vatSettingsEntry = CreateAdminEntry(0m);
+        _vatSettingsEntry.Placeholder = "25,5";
+        _vatSettingsEntry.HeightRequest = 44;
+        _vatSettingsEntry.HorizontalTextAlignment = TextAlignment.Start;
+
+        var saveButton = new Button
+        {
+            BackgroundColor = AppThemeService.PrimaryButton,
+            TextColor = Colors.White,
+            CornerRadius = 8,
+            HeightRequest = 38,
+            FontSize = 13,
+            Padding = new Thickness(14, 0)
+        };
+        saveButton.Clicked += OnSaveSettingsClicked;
+
+        var resetButton = new Button
+        {
+            BackgroundColor = Colors.Transparent,
+            TextColor = AppThemeService.PrimaryText,
+            BorderColor = AppThemeService.AccentStroke,
+            BorderWidth = 1,
+            CornerRadius = 8,
+            HeightRequest = 38,
+            FontSize = 13,
+            Padding = new Thickness(14, 0)
+        };
+        resetButton.Clicked += OnResetDefaultsClicked;
+
+        _adminStatusLabel = new Label
+        {
+            TextColor = AppThemeService.Success,
+            FontSize = 12,
+            IsVisible = false
+        };
+
+        HourlySettingsRows = hourlyRows;
+        MileageSettingsRows = mileageRows;
+
+        var content = new VerticalStackLayout
+        {
+            Spacing = 10,
+            Children =
+            {
+                CreateTitleLabel(LocalizationService.T("admin_settings_title"), AppThemeService.PrimaryText),
+                CreateSectionLabel(LocalizationService.T("hourly_rates")),
+                hourlyRows,
+                CreateSectionLabel(LocalizationService.T("mileage_rates"), topMargin: 8),
+                mileageRows,
+                CreateSectionLabel($"{LocalizationService.T("vat_label")} (%)", topMargin: 8),
+                CreateSageInputBorder(_vatSettingsEntry),
+                new Grid
+                {
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition(GridLength.Auto),
+                        new ColumnDefinition(GridLength.Auto),
+                        new ColumnDefinition(GridLength.Star)
+                    },
+                    ColumnSpacing = 10,
+                    Margin = new Thickness(0, 10, 0, 0),
+                    Children = { saveButton, resetButton }
+                },
+                _adminStatusLabel
+            }
+        };
+
+        Grid.SetColumn(resetButton, 1);
+        saveButton.Text = LocalizationService.T("save");
+        resetButton.Text = LocalizationService.T("reset_defaults");
+
+        return new ScrollView
+        {
+            Content = CreateCard(content, AppThemeService.AdminPanelBg, AppThemeService.Stroke)
+        };
+    }
+
+    private ScrollView CreateAppPanel()
+    {
+        _languagePicker = CreatePicker();
+        _themePicker = CreatePicker();
+        _notificationsSwitch = new Switch
+        {
+            OnColor = AppThemeService.AppPrimaryButton,
+            ThumbColor = Colors.White,
+            VerticalOptions = LayoutOptions.Center
+        };
+
+        var saveButton = new Button
+        {
+            BackgroundColor = AppThemeService.AppPrimaryButton,
+            TextColor = Colors.White,
+            CornerRadius = 8,
+            HeightRequest = 38,
+            FontSize = 13,
+            Padding = new Thickness(14, 0),
+            HorizontalOptions = LayoutOptions.Start,
+            Margin = new Thickness(0, 10, 0, 0)
+        };
+        saveButton.Clicked += OnSaveAppSettingsClicked;
+
+        _appStatusLabel = new Label
+        {
+            TextColor = AppThemeService.AppSuccess,
+            FontSize = 12,
+            IsVisible = false
+        };
+
+        var notificationsGrid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto)
+            },
+            Margin = new Thickness(0, 8, 0, 0),
+            Children =
+            {
+                CreateSectionLabel(LocalizationService.T("notifications"), AppThemeService.AppBodyText),
+                _notificationsSwitch
+            }
+        };
+        Grid.SetColumn(_notificationsSwitch, 1);
+
+        var content = new VerticalStackLayout
+        {
+            Spacing = 10,
+            Children =
+            {
+                CreateTitleLabel(LocalizationService.T("app_settings_title"), AppThemeService.AppPrimaryText),
+                CreateSectionLabel(LocalizationService.T("language"), AppThemeService.AppBodyText),
+                CreateBlueInputBorder(_languagePicker),
+                CreateSectionLabel(LocalizationService.T("theme"), AppThemeService.AppBodyText, topMargin: 8),
+                CreateBlueInputBorder(_themePicker),
+                notificationsGrid,
+                saveButton,
+                _appStatusLabel
+            }
+        };
+        saveButton.Text = LocalizationService.T("save");
+
+        return new ScrollView
+        {
+            Content = CreateCard(content, AppThemeService.AppPanelBg, AppThemeService.AppInputStroke)
+        };
+    }
+
+    private VerticalStackLayout HourlySettingsRows { get; set; } = null!;
+    private VerticalStackLayout MileageSettingsRows { get; set; } = null!;
+
+    private static Label CreateTitleLabel(string text, Color color) =>
+        new()
+        {
+            Text = text,
+            FontSize = 20,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = color
+        };
+
+    private static Label CreateSectionLabel(string text, Color? color = null, double topMargin = 0) =>
+        new()
+        {
+            Text = text,
+            FontSize = 14,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = color ?? AppThemeService.BodyText,
+            Margin = new Thickness(0, topMargin, 0, 0)
+        };
+
+    private static Picker CreatePicker() =>
+        new()
+        {
+            BackgroundColor = Colors.Transparent,
+            TextColor = AppThemeService.AppPickerText,
+            TitleColor = AppThemeService.SecondaryText,
+            FontSize = 15,
+            HeightRequest = 44
+        };
+
+    private static Border CreateSageInputBorder(View content) =>
+        new()
+        {
+            BackgroundColor = AppThemeService.AdminInputBg,
+            Stroke = AppThemeService.AccentStroke,
+            StrokeThickness = 1.2,
+            StrokeShape = new RoundRectangle { CornerRadius = 10 },
+            Padding = new Thickness(10, 4),
+            Content = content
+        };
+
+    private static Border CreateBlueInputBorder(View content) =>
+        new()
+        {
+            BackgroundColor = AppThemeService.AppInputBg,
+            Stroke = AppThemeService.AppInputStroke,
+            StrokeThickness = 1.2,
+            StrokeShape = new RoundRectangle { CornerRadius = 10 },
+            Padding = new Thickness(10, 4),
+            Content = content
+        };
+
+    private static Border CreateCard(View content, Color background, Color stroke) =>
+        new()
+        {
+            BackgroundColor = background,
+            Stroke = stroke,
+            StrokeThickness = 1,
+            StrokeShape = new RoundRectangle { CornerRadius = 14 },
+            Padding = 16,
+            Margin = new Thickness(0, 0, 0, 8),
+            Content = content
+        };
 
     private void ApplyLocalization()
     {
         Title = LocalizationService.T("settings");
-        AdminTitleLabel.Text = LocalizationService.T("admin_settings_title");
-        OpenAppSettingsButton.Text = LocalizationService.T("app_settings");
-        HourlyRatesLabel.Text = LocalizationService.T("hourly_rates");
-        MileageRatesLabel.Text = LocalizationService.T("mileage_rates");
-        VatPercentLabel.Text = $"{LocalizationService.T("vat_label")} (%)";
-        SaveRatesButton.Text = LocalizationService.T("save");
-        ResetDefaultsButton.Text = LocalizationService.T("reset_defaults");
+        AdminTabButton.Text = LocalizationService.T("tab_admin");
+        AppTabButton.Text = LocalizationService.T("tab_app");
     }
 
-    private void BuildInputs()
+    private void OnAdminTabClicked(object? sender, EventArgs e) => SelectTab(AdminTabIndex);
+
+    private void OnAppTabClicked(object? sender, EventArgs e) => SelectTab(AppTabIndex);
+
+    private void OnCarouselPositionChanged(object? sender, PositionChangedEventArgs e)
+    {
+        if (_suppressCarouselSync)
+        {
+            return;
+        }
+
+        UpdateTabVisualState(e.CurrentPosition);
+    }
+
+    private void SelectTab(int index)
+    {
+        EnsureCarouselInitialized();
+
+        if (SettingsCarousel.Position == index)
+        {
+            UpdateTabVisualState(index);
+            return;
+        }
+
+        _suppressCarouselSync = true;
+        SettingsCarousel.Position = index;
+        _suppressCarouselSync = false;
+        UpdateTabVisualState(index);
+    }
+
+    private void UpdateTabVisualState(int selectedIndex)
+    {
+        bool adminSelected = selectedIndex == AdminTabIndex;
+        AdminTabButton.BackgroundColor = adminSelected ? AppThemeService.AdminTabActiveBg : Colors.Transparent;
+        AdminTabButton.TextColor = adminSelected ? AppThemeService.PrimaryText : AppThemeService.SecondaryText;
+        AdminTabButton.FontAttributes = adminSelected ? FontAttributes.Bold : FontAttributes.None;
+
+        bool appSelected = selectedIndex == AppTabIndex;
+        AppTabButton.BackgroundColor = appSelected ? AppThemeService.AppTabActiveBg : Colors.Transparent;
+        AppTabButton.TextColor = appSelected ? AppThemeService.AppTabActiveText : AppThemeService.SecondaryText;
+        AppTabButton.FontAttributes = appSelected ? FontAttributes.Bold : FontAttributes.None;
+    }
+
+    private void BuildAdminInputs()
     {
         _hourlyEntries.Clear();
         _mileageEntries.Clear();
@@ -43,39 +367,74 @@ public partial class SettingsPage : ContentPage
 
         foreach (RateItem rate in _settings.HourlyRates)
         {
-            Entry entry = CreateEntry(rate.Value);
+            Entry entry = CreateAdminEntry(rate.Value);
             _hourlyEntries[rate.Id] = entry;
-            HourlySettingsRows.Children.Add(CreateRow(rate.Name, entry));
+            HourlySettingsRows.Children.Add(CreateAdminRow(LocalizationService.RateName(rate), entry));
         }
 
         foreach (RateItem rate in _settings.MileageRates)
         {
-            Entry entry = CreateEntry(rate.Value);
+            Entry entry = CreateAdminEntry(rate.Value);
             _mileageEntries[rate.Id] = entry;
-            MileageSettingsRows.Children.Add(CreateRow(rate.Name, entry));
+            MileageSettingsRows.Children.Add(CreateAdminRow(LocalizationService.RateName(rate), entry));
         }
 
-        VatSettingsEntry.Text = _settings.VatPercent.ToString("0.##", _fiCulture);
-        SettingsValidationLabel.IsVisible = false;
-        SettingsValidationLabel.Text = string.Empty;
+        if (_vatSettingsEntry is not null)
+        {
+            _vatSettingsEntry.Text = _settings.VatPercent.ToString("0.##", _fiCulture);
+        }
+
+        if (_adminStatusLabel is not null)
+        {
+            _adminStatusLabel.IsVisible = false;
+            _adminStatusLabel.Text = string.Empty;
+        }
     }
 
-    private Entry CreateEntry(decimal value)
+    private void BuildAppPickers()
     {
-        return new Entry
+        if (_languagePicker is null || _themePicker is null || _notificationsSwitch is null)
+        {
+            return;
+        }
+
+        _languagePicker.ItemsSource = new List<string>
+        {
+            LocalizationService.T("language_fi"),
+            LocalizationService.T("language_en")
+        };
+        _languagePicker.SelectedIndex = AppPreferencesStore.GetLanguage() == "en" ? 1 : 0;
+
+        _themePicker.ItemsSource = new List<string>
+        {
+            LocalizationService.T("theme_light"),
+            LocalizationService.T("theme_dark")
+        };
+        _themePicker.SelectedIndex = AppPreferencesStore.GetTheme() == AppTheme.Dark ? 1 : 0;
+
+        _notificationsSwitch.IsToggled = AppPreferencesStore.GetNotificationsEnabled();
+
+        if (_appStatusLabel is not null)
+        {
+            _appStatusLabel.IsVisible = false;
+            _appStatusLabel.Text = string.Empty;
+        }
+    }
+
+    private static Entry CreateAdminEntry(decimal value) =>
+        new()
         {
             Keyboard = Keyboard.Numeric,
-            Text = value.ToString("0.##", _fiCulture),
+            Text = value == 0m ? string.Empty : value.ToString("0.##", CultureInfo.GetCultureInfo("fi-FI")),
             BackgroundColor = Colors.Transparent,
-            TextColor = Color.FromArgb("#153D2B"),
-            PlaceholderColor = Color.FromArgb("#90A39A"),
+            TextColor = AppThemeService.InputText,
+            PlaceholderColor = AppThemeService.Placeholder,
             FontSize = 15,
             HeightRequest = 36,
             HorizontalTextAlignment = TextAlignment.End
         };
-    }
 
-    private Grid CreateRow(string label, Entry entry)
+    private static Grid CreateAdminRow(string label, Entry entry)
     {
         Grid row = new()
         {
@@ -91,45 +450,81 @@ public partial class SettingsPage : ContentPage
         {
             Text = label,
             FontSize = 13,
-            TextColor = Color.FromArgb("#2F4736"),
+            TextColor = AppThemeService.BodyText,
             VerticalOptions = LayoutOptions.Center
         });
         row.Add(entry, 1, 0);
         return row;
     }
 
-    private async void OnSaveSettingsClicked(object? sender, EventArgs e)
+    private void OnSaveSettingsClicked(object? sender, EventArgs e)
     {
-        if (!TryCollectSettings(out CalculatorSettings? updated, out string validation))
+        if (_adminStatusLabel is null)
         {
-            SettingsValidationLabel.Text = validation;
-            SettingsValidationLabel.IsVisible = true;
+            return;
+        }
+
+        if (!TryCollectAdminSettings(out CalculatorSettings? updated, out string validation))
+        {
+            _adminStatusLabel.Text = validation;
+            _adminStatusLabel.TextColor = AppThemeService.Error;
+            _adminStatusLabel.IsVisible = true;
             return;
         }
 
         CalculatorSettingsStore.Save(updated!);
-        SettingsValidationLabel.Text = LocalizationService.T("saved");
-        SettingsValidationLabel.IsVisible = true;
-        await Task.Delay(300);
-        await Shell.Current.GoToAsync("..");
+        _settings = CalculatorSettingsStore.Clone(updated!);
+        _adminStatusLabel.Text = LocalizationService.T("saved");
+        _adminStatusLabel.TextColor = AppThemeService.Success;
+        _adminStatusLabel.IsVisible = true;
     }
 
     private void OnResetDefaultsClicked(object? sender, EventArgs e)
     {
+        if (_adminStatusLabel is null)
+        {
+            return;
+        }
+
         CalculatorSettingsStore.ResetToDefaults();
         _settings = CalculatorSettingsStore.Clone(CalculatorSettingsStore.Defaults);
-        BuildInputs();
-        SettingsValidationLabel.Text = LocalizationService.T("defaults_restored");
-        SettingsValidationLabel.IsVisible = true;
+        BuildAdminInputs();
+        _adminStatusLabel.Text = LocalizationService.T("defaults_restored");
+        _adminStatusLabel.TextColor = AppThemeService.Success;
+        _adminStatusLabel.IsVisible = true;
     }
 
-    private async void OnOpenAppSettingsClicked(object? sender, EventArgs e)
+    private void OnSaveAppSettingsClicked(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(AppSettingsPage));
+        if (_languagePicker is null || _themePicker is null || _notificationsSwitch is null || _appStatusLabel is null)
+        {
+            return;
+        }
+
+        string language = _languagePicker.SelectedIndex == 1 ? "en" : "fi";
+        AppTheme theme = _themePicker.SelectedIndex == 1 ? AppTheme.Dark : AppTheme.Light;
+
+        AppPreferencesStore.SetLanguage(language);
+        AppPreferencesStore.SetNotificationsEnabled(_notificationsSwitch.IsToggled);
+        AppThemeService.SetTheme(theme);
+
+        if (_appStatusLabel is not null)
+        {
+            _appStatusLabel.Text = LocalizationService.T("saved");
+            _appStatusLabel.TextColor = AppThemeService.AppSuccess;
+            _appStatusLabel.IsVisible = true;
+        }
     }
 
-    private bool TryCollectSettings(out CalculatorSettings? settings, out string validation)
+    private bool TryCollectAdminSettings(out CalculatorSettings? settings, out string validation)
     {
+        if (_vatSettingsEntry is null)
+        {
+            settings = null;
+            validation = LocalizationService.T("invalid_vat");
+            return false;
+        }
+
         List<RateItem> hourly = [];
         foreach (RateItem rate in _settings.HourlyRates)
         {
@@ -137,7 +532,7 @@ public partial class SettingsPage : ContentPage
             if (value < 0)
             {
                 settings = null;
-                validation = $"Virheellinen työhinta: {rate.Name}.";
+                validation = LocalizationService.T("invalid_hourly_rate").Replace("{name}", LocalizationService.RateName(rate));
                 return false;
             }
 
@@ -151,18 +546,18 @@ public partial class SettingsPage : ContentPage
             if (value < 0)
             {
                 settings = null;
-                validation = $"Virheellinen matkahinta: {rate.Name}.";
+                validation = LocalizationService.T("invalid_mileage_rate").Replace("{name}", LocalizationService.RateName(rate));
                 return false;
             }
 
             mileage.Add(new RateItem(rate.Id, rate.Name, value));
         }
 
-        decimal vat = ParseDecimal(VatSettingsEntry.Text);
+        decimal vat = ParseDecimal(_vatSettingsEntry.Text);
         if (vat < 0)
         {
             settings = null;
-            validation = "ALV ei voi olla negatiivinen.";
+            validation = LocalizationService.T("invalid_vat");
             return false;
         }
 

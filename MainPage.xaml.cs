@@ -25,9 +25,26 @@ public partial class MainPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        AppThemeService.ThemeChanged += OnAppThemeChanged;
+        AppThemeService.ApplySavedTheme();
         ApplyLocalization();
         ReloadSettingsFromStore();
         CalculateAndRender();
+    }
+
+    protected override void OnDisappearing()
+    {
+        AppThemeService.ThemeChanged -= OnAppThemeChanged;
+        base.OnDisappearing();
+    }
+
+    private void OnAppThemeChanged(object? sender, EventArgs e)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            ReloadSettingsFromStore();
+            CalculateAndRender();
+        });
     }
 
     private void ApplyLocalization()
@@ -118,13 +135,13 @@ public partial class MainPage : ContentPage
             Grid row = new()
             {
                 Padding = new Thickness(14, 10),
-                BackgroundColor = Color.FromArgb("#F2F8F2"),
+                BackgroundColor = AppThemeService.DropdownBackground,
                 HeightRequest = DropdownRowHeight
             };
             row.Children.Add(new Label
             {
-                Text = $"{rate.Value.ToString("0.00", CultureInfo.GetCultureInfo("fi-FI"))} €/ {unit} - {rate.Name}",
-                TextColor = Color.FromArgb("#0E3726"),
+                Text = FormatRateOptionLabel(rate, unit),
+                TextColor = AppThemeService.DropdownOptionText,
                 FontSize = 14,
                 VerticalOptions = LayoutOptions.Center
             });
@@ -145,10 +162,11 @@ public partial class MainPage : ContentPage
         VatCaptionLabel.Text = $"{vatToken} ({_vatPercent.ToString("0.##", _fiCulture)} %)";
     }
 
-    private static string BuildHeaderLabel(RateItem rate, string unit)
-    {
-        return $"{rate.Value.ToString("0.00", CultureInfo.GetCultureInfo("fi-FI"))} €/ {unit} - {rate.Name}";
-    }
+    private static string BuildHeaderLabel(RateItem rate, string unit) =>
+        FormatRateOptionLabel(rate, unit);
+
+    private static string FormatRateOptionLabel(RateItem rate, string unit) =>
+        $"{rate.Value.ToString("0.00", CultureInfo.GetCultureInfo("fi-FI"))} €/ {unit} - {LocalizationService.RateName(rate)}";
 
     private void DismissKeyboard()
     {
@@ -263,13 +281,13 @@ public partial class MainPage : ContentPage
 
         if (hours < 0)
         {
-            message = "Työtunnit ei voi olla negatiivinen.";
+            message = LocalizationService.T("validation_hours_negative");
             return false;
         }
 
         if (kilometers < 0)
         {
-            message = "Ajokilometrit ei voi olla negatiivinen.";
+            message = LocalizationService.T("validation_km_negative");
             return false;
         }
 

@@ -33,7 +33,26 @@ public static class LocalizationService
         ["language_fi"] = "Suomi",
         ["language_en"] = "Englanti",
         ["theme_light"] = "Vaalea",
-        ["theme_dark"] = "Tumma"
+        ["theme_dark"] = "Tumma",
+        ["tab_admin"] = "Administraattori",
+        ["tab_app"] = "Yleiset asetukset",
+        ["notifications"] = "Ilmoitukset",
+        ["invalid_hourly_rate"] = "Virheellinen työhinta: {name}.",
+        ["invalid_mileage_rate"] = "Virheellinen matkahinta: {name}.",
+        ["invalid_vat"] = "ALV ei voi olla negatiivinen.",
+        ["rate_perustalkkari"] = "perustalkkari",
+        ["rate_digitalkkari"] = "digitalkkari",
+        ["rate_konetalkkari"] = "konetalkkari",
+        ["rate_perus_ei_jasen"] = "perus ei jäsen",
+        ["rate_digi_ei_jasen"] = "digi ei jäsen",
+        ["rate_kone_ei_jasen"] = "kone ei jäsen",
+        ["rate_julkinen"] = "julkinen",
+        ["rate_perus"] = "perus",
+        ["rate_lumikola"] = "lumikola",
+        ["rate_matkustaja"] = "matkustaja",
+        ["rate_perakarry"] = "peräkärry",
+        ["validation_hours_negative"] = "Työtunnit ei voi olla negatiivinen.",
+        ["validation_km_negative"] = "Ajokilometrit ei voi olla negatiivinen."
     };
 
     private static readonly Dictionary<string, string> En = new()
@@ -67,7 +86,26 @@ public static class LocalizationService
         ["language_fi"] = "Finnish",
         ["language_en"] = "English",
         ["theme_light"] = "Light",
-        ["theme_dark"] = "Dark"
+        ["theme_dark"] = "Dark",
+        ["tab_admin"] = "Administrator",
+        ["tab_app"] = "General settings",
+        ["notifications"] = "Notifications",
+        ["invalid_hourly_rate"] = "Invalid hourly rate: {name}.",
+        ["invalid_mileage_rate"] = "Invalid mileage rate: {name}.",
+        ["invalid_vat"] = "VAT cannot be negative.",
+        ["rate_perustalkkari"] = "Basic carpenter",
+        ["rate_digitalkkari"] = "Digital carpenter",
+        ["rate_konetalkkari"] = "Machine carpenter",
+        ["rate_perus_ei_jasen"] = "Basic (non-member)",
+        ["rate_digi_ei_jasen"] = "Digital (non-member)",
+        ["rate_kone_ei_jasen"] = "Machine (non-member)",
+        ["rate_julkinen"] = "Public",
+        ["rate_perus"] = "Standard",
+        ["rate_lumikola"] = "Snow blower",
+        ["rate_matkustaja"] = "Passenger",
+        ["rate_perakarry"] = "Trailer",
+        ["validation_hours_negative"] = "Work hours cannot be negative.",
+        ["validation_km_negative"] = "Driving kilometers cannot be negative."
     };
 
     public static string CurrentLanguage => AppPreferencesStore.GetLanguage();
@@ -76,5 +114,19 @@ public static class LocalizationService
     {
         Dictionary<string, string> source = CurrentLanguage == "en" ? En : Fi;
         return source.TryGetValue(key, out string? value) ? value : key;
+    }
+
+    public static string RateName(RateItem rate) => RateName(rate.Id, rate.Name);
+
+    public static string RateName(string id, string fallbackName)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return fallbackName;
+        }
+
+        string key = $"rate_{id}";
+        Dictionary<string, string> source = CurrentLanguage == "en" ? En : Fi;
+        return source.TryGetValue(key, out string? value) ? value : fallbackName;
     }
 }

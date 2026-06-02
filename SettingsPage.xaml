@@ -3,103 +3,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SpecialCalculator.SettingsPage"
              Title="Asetukset"
-             BackgroundColor="#F4F8F4">
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
-            <Border BackgroundColor="#E8F0E8"
-                    Stroke="#CEDDCE"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 14"
-                    Padding="16">
-                <VerticalStackLayout Spacing="10">
-                    <Label x:Name="AdminTitleLabel"
-                           Text="Ylläpito / Asetukset"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="#1F5A3B" />
-                    <Button x:Name="OpenAppSettingsButton"
-                            Text="Sovellusasetukset"
-                            Clicked="OnOpenAppSettingsClicked"
-                            BackgroundColor="Transparent"
-                            TextColor="#1F5A3B"
-                            BorderColor="#2F6B4A"
-                            BorderWidth="1"
-                            CornerRadius="8"
-                            HeightRequest="36"
-                            FontSize="13"
-                            Padding="12,0"
-                            HorizontalOptions="Start" />
+             BackgroundColor="{DynamicResource CalcPageBackground}">
+    <Grid Padding="16"
+          RowDefinitions="Auto,*"
+          RowSpacing="12">
+        <Border Grid.Row="0"
+                x:Name="TabBarBorder"
+                BackgroundColor="{DynamicResource CalcTabBarBackground}"
+                Stroke="{DynamicResource CalcStroke}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 14"
+                Padding="4">
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="4">
+                <Button x:Name="AdminTabButton"
+                        Text="Administraattori"
+                        Clicked="OnAdminTabClicked"
+                        CornerRadius="8"
+                        BorderWidth="0"
+                        FontSize="13"
+                        HeightRequest="40"
+                        Padding="8,0" />
+                <Button x:Name="AppTabButton"
+                        Grid.Column="1"
+                        Text="Yleiset asetukset"
+                        Clicked="OnAppTabClicked"
+                        CornerRadius="8"
+                        BorderWidth="0"
+                        FontSize="13"
+                        HeightRequest="40"
+                        Padding="8,0" />
+            </Grid>
+        </Border>
 
-                    <Label x:Name="HourlyRatesLabel"
-                           Text="Työhinnat (alv 0 % / h)"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="#2F4736" />
-                    <VerticalStackLayout x:Name="HourlySettingsRows"
-                                         Spacing="8" />
-
-                    <Label x:Name="MileageRatesLabel"
-                           Text="Matkahinnat (alv 0 % / km)"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="#2F4736"
-                           Margin="0,8,0,0" />
-                    <VerticalStackLayout x:Name="MileageSettingsRows"
-                                         Spacing="8" />
-
-                    <Label x:Name="VatPercentLabel"
-                           Text="ALV (%)"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="#2F4736"
-                           Margin="0,8,0,0" />
-                    <Border BackgroundColor="#F7FBF7"
-                            Stroke="#2F6B4A"
-                            StrokeThickness="1.2"
-                            StrokeShape="RoundRectangle 10"
-                            Padding="10,4">
-                        <Entry x:Name="VatSettingsEntry"
-                               Placeholder="25,5"
-                               BackgroundColor="Transparent"
-                               TextColor="#153D2B"
-                               PlaceholderColor="#90A39A"
-                               FontSize="15"
-                               HeightRequest="44"
-                               Keyboard="Numeric" />
-                    </Border>
-
-                    <Grid ColumnDefinitions="Auto,Auto,*"
-                          ColumnSpacing="10"
-                          Margin="0,10,0,0">
-                        <Button x:Name="SaveRatesButton"
-                                Text="Tallenna"
-                                Clicked="OnSaveSettingsClicked"
-                                BackgroundColor="#1F5A3B"
-                                TextColor="White"
-                                CornerRadius="8"
-                                HeightRequest="38"
-                                FontSize="13"
-                                Padding="14,0" />
-                        <Button x:Name="ResetDefaultsButton"
-                                Grid.Column="1"
-                                Text="Palauta oletukset"
-                                Clicked="OnResetDefaultsClicked"
-                                BackgroundColor="Transparent"
-                                TextColor="#1F5A3B"
-                                BorderColor="#2F6B4A"
-                                BorderWidth="1"
-                                CornerRadius="8"
-                                HeightRequest="38"
-                                FontSize="13"
-                                Padding="14,0" />
-                    </Grid>
-
-                    <Label x:Name="SettingsValidationLabel"
-                           TextColor="#B42318"
-                           FontSize="12"
-                           IsVisible="False" />
-                </VerticalStackLayout>
-            </Border>
-        </VerticalStackLayout>
-    </ScrollView>
+        <CarouselView x:Name="SettingsCarousel"
+                      Grid.Row="1"
+                      Loop="False"
+                      IsSwipeEnabled="True"
+                      PeekAreaInsets="0,0,0,0"
+                      PositionChanged="OnCarouselPositionChanged" />
+    </Grid>
 </ContentPage>

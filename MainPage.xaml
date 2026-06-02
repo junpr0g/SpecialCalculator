@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SpecialCalculator.MainPage"
-             BackgroundColor="#F4F8F4">
+             BackgroundColor="{DynamicResource CalcPageBackground}">
     <ContentPage.Resources>
         <Style x:Key="InputBorderStyle" TargetType="Border">
-            <Setter Property="BackgroundColor" Value="#F7FBF7" />
-            <Setter Property="Stroke" Value="#2F6B4A" />
+            <Setter Property="BackgroundColor" Value="{DynamicResource CalcInputBackground}" />
+            <Setter Property="Stroke" Value="{DynamicResource CalcAccentStroke}" />
             <Setter Property="StrokeThickness" Value="1.2" />
             <Setter Property="StrokeShape" Value="RoundRectangle 10" />
             <Setter Property="Padding" Value="10,4" />
@@ -14,30 +14,49 @@
 
         <Style x:Key="InputEntryStyle" TargetType="Entry">
             <Setter Property="BackgroundColor" Value="Transparent" />
-            <Setter Property="TextColor" Value="#153D2B" />
-            <Setter Property="PlaceholderColor" Value="#90A39A" />
+            <Setter Property="TextColor" Value="{DynamicResource CalcInputText}" />
+            <Setter Property="PlaceholderColor" Value="{DynamicResource CalcPlaceholder}" />
             <Setter Property="FontSize" Value="15" />
             <Setter Property="HeightRequest" Value="44" />
         </Style>
 
         <Style x:Key="DropdownHeaderTextStyle" TargetType="Label">
-            <Setter Property="TextColor" Value="#153D2B" />
+            <Setter Property="TextColor" Value="{DynamicResource CalcInputText}" />
             <Setter Property="FontSize" Value="15" />
             <Setter Property="VerticalOptions" Value="Center" />
             <Setter Property="LineBreakMode" Value="TailTruncation" />
         </Style>
 
         <Style x:Key="DropdownOptionTextStyle" TargetType="Label">
-            <Setter Property="TextColor" Value="#0E3726" />
+            <Setter Property="TextColor" Value="{DynamicResource CalcDropdownOptionText}" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="PrimaryLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource CalcPrimaryText}" />
+        </Style>
+
+        <Style x:Key="BodyLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource CalcBodyText}" />
+        </Style>
+
+        <Style x:Key="SecondaryActionButtonStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{DynamicResource CalcButtonBackground}" />
+            <Setter Property="TextColor" Value="{DynamicResource CalcPrimaryText}" />
+            <Setter Property="BorderColor" Value="{DynamicResource CalcAccentStroke}" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="HeightRequest" Value="36" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="12,0" />
         </Style>
     </ContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
             
-            <Border BackgroundColor="#E8F0E8"
-                    Stroke="#CEDDCE"
+            <Border BackgroundColor="{DynamicResource CalcHeaderBackground}"
+                    Stroke="{DynamicResource CalcStroke}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 14"
                     HeightRequest="100"
@@ -49,25 +68,18 @@
                                    Text="Lapin Koti- ja Mökkiyhdistys ry"
                                FontSize="20"
                                FontAttributes="Bold"
-                               TextColor="#1F5A3B" />
+                               TextColor="{DynamicResource CalcPrimaryText}" />
                         <Label x:Name="HeaderSubtitleLabel"
                                Text="Palvelukustannuslaskuri"
                                FontSize="14"
-                               TextColor="#5F7165" />
+                               TextColor="{DynamicResource CalcSecondaryText}" />
                     </VerticalStackLayout>
 
                     <Button x:Name="OpenSettingsButton"
                             Grid.Column="1"
                             Text="Asetukset"
                             Clicked="OnOpenSettingsClicked"
-                            BackgroundColor="#DDE8DD"
-                            TextColor="#1F5A3B"
-                            BorderColor="#2F6B4A"
-                            BorderWidth="1"
-                            CornerRadius="8"
-                            HeightRequest="36"
-                            FontSize="13"
-                            Padding="12,0"
+                            Style="{StaticResource SecondaryActionButtonStyle}"
                             VerticalOptions="Center"
                             HorizontalOptions="End"
                             SemanticProperties.Hint="Avaa ylläpidon asetukset" />
@@ -81,8 +93,8 @@
                   RowSpacing="12">
                 <Border x:Name="ResultsCard"
                         Grid.Row="0"
-                        BackgroundColor="White"
-                        Stroke="#CEDDCE"
+                        BackgroundColor="{DynamicResource CalcCardBackground}"
+                        Stroke="{DynamicResource CalcStroke}"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 14"
                         Padding="16">
@@ -91,38 +103,39 @@
                                Text="Laskelman erittely"
                    FontSize="20"
                    FontAttributes="Bold"
-                   TextColor="#1F5A3B" />
+                   Style="{StaticResource PrimaryLabelStyle}" />
 
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label x:Name="WorkCaptionLabel" TextColor="#1F5A3B" />
+                            <Label x:Name="WorkCaptionLabel" Style="{StaticResource PrimaryLabelStyle}" />
                             <Label x:Name="WorkValueLabel"
                    Grid.Column="1"
                    FontAttributes="Bold"
-                   TextColor="#1F5A3B"/>
+                   Style="{StaticResource PrimaryLabelStyle}"/>
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label x:Name="TravelCaptionLabel" TextColor="#1F5A3B" />
+                            <Label x:Name="TravelCaptionLabel" Style="{StaticResource PrimaryLabelStyle}" />
                             <Label x:Name="TravelValueLabel"
                    Grid.Column="1"
                    FontAttributes="Bold" 
-                   TextColor="#1F5A3B"/>
+                   Style="{StaticResource PrimaryLabelStyle}"/>
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label x:Name="SubtotalCaptionLabel" TextColor="#1F5A3B"/>
+                            <Label x:Name="SubtotalCaptionLabel" Style="{StaticResource PrimaryLabelStyle}"/>
                             <Label x:Name="SubtotalValueLabel"
                    Grid.Column="1"
                    FontAttributes="Bold"
-                   TextColor="#1F5A3B"/>
+                   Style="{StaticResource PrimaryLabelStyle}"/>
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label x:Name="VatCaptionLabel" TextColor="#1F5A3B"/>
+                            <Label x:Name="VatCaptionLabel" Style="{StaticResource PrimaryLabelStyle}"/>
                             <Label x:Name="VatValueLabel"
                    Grid.Column="1"
                    FontAttributes="Bold"
-                   TextColor="#1F5A3B"/>
+                   Style="{StaticResource PrimaryLabelStyle}"/>
                         </Grid>
 
-                        <Border BackgroundColor="#E8F0E8"
+                        <Border x:Name="TotalBandBorder"
+                                BackgroundColor="{DynamicResource CalcTotalBand}"
                 StrokeShape="RoundRectangle 10"
                 Padding="12"
                 Margin="0,8,0,0">
@@ -132,12 +145,12 @@
                                        x:Name="TotalCaptionLabel"
                                        FontSize="20"
                                        FontAttributes="Bold"
-                                       TextColor="#1F5A3B" />
+                                       Style="{StaticResource PrimaryLabelStyle}" />
                                 <Label x:Name="TotalValueLabel"
                                        Grid.Column="1"
                                        FontSize="28"
                                        FontAttributes="Bold"
-                                       TextColor="#1F5A3B" />       
+                                       Style="{StaticResource PrimaryLabelStyle}" />       
                             </Grid>
                         </Border>
                     </VerticalStackLayout>
@@ -145,8 +158,8 @@
 
                 <Border x:Name="InputCard"
                         Grid.Row="1"
-                        BackgroundColor="#E8F0E8"
-                        Stroke="#CEDDCE"
+                        BackgroundColor="{DynamicResource CalcCardAltBackground}"
+                        Stroke="{DynamicResource CalcStroke}"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 14"
                         Padding="16">
@@ -157,20 +170,13 @@
                                    Text="Syötä tiedot"
                                    FontSize="20"
                                    FontAttributes="Bold"
-                                   TextColor="#1F5A3B"
+                                   Style="{StaticResource PrimaryLabelStyle}"
                                    VerticalOptions="Center" />
                             <Button x:Name="ClearInputsButton"
                                     Grid.Column="1"
                                     Text="Tyhjennä"
                                     Clicked="OnResetClicked"
-                                    BackgroundColor="#DDE8DD"
-                                    TextColor="#1F5A3B"
-                                    BorderColor="#2F6B4A"
-                                    BorderWidth="1"
-                                    CornerRadius="8"
-                                    HeightRequest="36"
-                                    FontSize="13"
-                                    Padding="12,0"
+                                    Style="{StaticResource SecondaryActionButtonStyle}"
                                     VerticalOptions="Center"
                                     HorizontalOptions="End"
                                     SemanticProperties.Hint="Tyhjentää syötetyt arvot ja palauttaa oletukset" />
@@ -180,7 +186,7 @@
                                Text="Valitse työtyyppi"
                                FontSize="14"
                                FontAttributes="Bold"
-                               TextColor="#2F4736" />
+                               Style="{StaticResource BodyLabelStyle}" />
                         <Border Style="{StaticResource InputBorderStyle}" Padding="10,0">
                             <Grid RowDefinitions="44,Auto">
                                 <Grid HeightRequest="44">
@@ -192,14 +198,14 @@
                                     <Label Text="▼"
                                            HorizontalOptions="End"
                                            VerticalOptions="Center"
-                                           TextColor="#2F6B4A"
+                                           TextColor="{DynamicResource CalcAccentStroke}"
                                            FontSize="12" />
                                 </Grid>
                                 <Border Grid.Row="1"
                                         Margin="-10,0,-10,0"
-                                        Stroke="#2F6B4A"
+                                        Stroke="{DynamicResource CalcAccentStroke}"
                                         StrokeThickness="1"
-                                        BackgroundColor="#F2F8F2"
+                                        BackgroundColor="{DynamicResource CalcDropdownBackground}"
                                         IsVisible="False"
                                         x:Name="HourlyOptionsBorder">
                                     <VerticalStackLayout x:Name="HourlyOptionsPanel"
@@ -212,7 +218,7 @@
                                Text="Valitse matkatyyppi"
                                FontSize="14"
                                FontAttributes="Bold"
-                               TextColor="#2F4736" />
+                               Style="{StaticResource BodyLabelStyle}" />
                         <Border Style="{StaticResource InputBorderStyle}" Padding="10,0">
                             <Grid RowDefinitions="44,Auto">
                                 <Grid HeightRequest="44">
@@ -224,14 +230,14 @@
                                     <Label Text="▼"
                                            HorizontalOptions="End"
                                            VerticalOptions="Center"
-                                           TextColor="#2F6B4A"
+                                           TextColor="{DynamicResource CalcAccentStroke}"
                                            FontSize="12" />
                                 </Grid>
                                 <Border Grid.Row="1"
                                         Margin="-10,0,-10,0"
-                                        Stroke="#2F6B4A"
+                                        Stroke="{DynamicResource CalcAccentStroke}"
                                         StrokeThickness="1"
-                                        BackgroundColor="#F2F8F2"
+                                        BackgroundColor="{DynamicResource CalcDropdownBackground}"
                                         IsVisible="False"
                                         x:Name="MileageOptionsBorder">
                                     <VerticalStackLayout x:Name="MileageOptionsPanel"
@@ -248,7 +254,7 @@
                                        Text="Työtunnit (h)"
                                        FontSize="14"
                                        FontAttributes="Bold"
-                                       TextColor="#2F4736" />
+                                       Style="{StaticResource BodyLabelStyle}" />
                                 <Border Style="{StaticResource InputBorderStyle}">
                                     <Entry x:Name="HoursEntry"
                                            Placeholder="0"
@@ -263,7 +269,7 @@
                                        Text="Ajokilometrit (km)"
                                        FontSize="14"
                                        FontAttributes="Bold"
-                                       TextColor="#2F4736" />
+                                       Style="{StaticResource BodyLabelStyle}" />
                                 <Border Style="{StaticResource InputBorderStyle}">
                                     <Entry x:Name="KilometersEntry"
                                            Placeholder="0"
@@ -275,7 +281,7 @@
                         </Grid>
 
                         <Label x:Name="ValidationLabel"
-                               TextColor="#B42318"
+                               TextColor="{DynamicResource CalcError}"
                                FontSize="12"
                                IsVisible="False" />
 

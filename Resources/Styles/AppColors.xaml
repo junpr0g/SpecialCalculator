@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Light theme (nature green) -->
+    <Color x:Key="CalcPageBackgroundLight">#F4F8F4</Color>
+    <Color x:Key="CalcCardBackgroundLight">#FFFFFF</Color>
+    <Color x:Key="CalcCardAltBackgroundLight">#E8F0E8</Color>
+    <Color x:Key="CalcHeaderBackgroundLight">#E8F0E8</Color>
+    <Color x:Key="CalcStrokeLight">#CEDDCE</Color>
+    <Color x:Key="CalcAccentStrokeLight">#2F6B4A</Color>
+    <Color x:Key="CalcPrimaryTextLight">#1F5A3B</Color>
+    <Color x:Key="CalcSecondaryTextLight">#5F7165</Color>
+    <Color x:Key="CalcBodyTextLight">#2F4736</Color>
+    <Color x:Key="CalcInputTextLight">#153D2B</Color>
+    <Color x:Key="CalcInputBackgroundLight">#F7FBF7</Color>
+    <Color x:Key="CalcDropdownBackgroundLight">#F2F8F2</Color>
+    <Color x:Key="CalcButtonBackgroundLight">#DDE8DD</Color>
+    <Color x:Key="CalcPlaceholderLight">#90A39A</Color>
+    <Color x:Key="CalcDropdownOptionTextLight">#0E3726</Color>
+    <Color x:Key="CalcTotalBandLight">#E8F0E8</Color>
+    <Color x:Key="CalcTabBarBackgroundLight">#FFFFFF</Color>
+    <Color x:Key="CalcAdminTabActiveBgLight">#D4E4D4</Color>
+    <Color x:Key="CalcAppTabActiveBgLight">#D6E8F7</Color>
+    <Color x:Key="CalcAppTabActiveTextLight">#1E4D72</Color>
+    <Color x:Key="CalcAdminPanelBgLight">#E8F0E8</Color>
+    <Color x:Key="CalcAppPanelBgLight">#E8F0FA</Color>
+    <Color x:Key="CalcAdminInputBgLight">#F7FBF7</Color>
+    <Color x:Key="CalcAppInputBgLight">#F5FAFF</Color>
+    <Color x:Key="CalcAppInputStrokeLight">#93C5FD</Color>
+    <Color x:Key="CalcAppPrimaryTextLight">#1E4D72</Color>
+    <Color x:Key="CalcAppBodyTextLight">#2F4A66</Color>
+    <Color x:Key="CalcAppPickerTextLight">#1E3A5F</Color>
+    <Color x:Key="CalcPrimaryButtonLight">#1F5A3B</Color>
+    <Color x:Key="CalcAppPrimaryButtonLight">#2563EB</Color>
+    <Color x:Key="CalcErrorLight">#B42318</Color>
+    <Color x:Key="CalcSuccessLight">#2F6B4A</Color>
+    <Color x:Key="CalcAppSuccessLight">#2563EB</Color>
+
+    <!-- Dark theme (dark green) -->
+    <Color x:Key="CalcPageBackgroundDark">#0B1410</Color>
+    <Color x:Key="CalcCardBackgroundDark">#152820</Color>
+    <Color x:Key="CalcCardAltBackgroundDark">#1A3028</Color>
+    <Color x:Key="CalcHeaderBackgroundDark">#13231C</Color>
+    <Color x:Key="CalcStrokeDark">#2A4A3D</Color>
+    <Color x:Key="CalcAccentStrokeDark">#4A9B6E</Color>
+    <Color x:Key="CalcPrimaryTextDark">#C8E6D4</Color>
+    <Color x:Key="CalcSecondaryTextDark">#8FB5A0</Color>
+    <Color x:Key="CalcBodyTextDark">#A8C9B8</Color>
+    <Color x:Key="CalcInputTextDark">#D4EDE0</Color>
+    <Color x:Key="CalcInputBackgroundDark">#122019</Color>
+    <Color x:Key="CalcDropdownBackgroundDark">#1A2E26</Color>
+    <Color x:Key="CalcButtonBackgroundDark">#243D32</Color>
+    <Color x:Key="CalcPlaceholderDark">#6B8F7A</Color>
+    <Color x:Key="CalcDropdownOptionTextDark">#D4EDE0</Color>
+    <Color x:Key="CalcTotalBandDark">#1F3D30</Color>
+    <Color x:Key="CalcTabBarBackgroundDark">#152820</Color>
+    <Color x:Key="CalcAdminTabActiveBgDark">#2A4D3A</Color>
+    <Color x:Key="CalcAppTabActiveBgDark">#1E3A4F</Color>
+    <Color x:Key="CalcAppTabActiveTextDark">#9BC5E8</Color>
+    <Color x:Key="CalcAdminPanelBgDark">#152820</Color>
+    <Color x:Key="CalcAppPanelBgDark">#142430</Color>
+    <Color x:Key="CalcAdminInputBgDark">#122019</Color>
+    <Color x:Key="CalcAppInputBgDark">#121E28</Color>
+    <Color x:Key="CalcAppInputStrokeDark">#3D6A8C</Color>
+    <Color x:Key="CalcAppPrimaryTextDark">#B8D4EC</Color>
+    <Color x:Key="CalcAppBodyTextDark">#8FAFC4</Color>
+    <Color x:Key="CalcAppPickerTextDark">#C5DBEB</Color>
+    <Color x:Key="CalcPrimaryButtonDark">#3D8B62</Color>
+    <Color x:Key="CalcAppPrimaryButtonDark">#3B82F6</Color>
+    <Color x:Key="CalcErrorDark">#F87171</Color>
+    <Color x:Key="CalcSuccessDark">#6BCF94</Color>
+    <Color x:Key="CalcAppSuccessDark">#60A5FA</Color>
+</ResourceDictionary>
