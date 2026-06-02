@@ -35,12 +35,23 @@
     </ContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
-            <Border BackgroundColor="White"
+            <Border BackgroundColor="#E8F0E8"
                     Stroke="#CEDDCE"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 14"
+                    HeightRequest="112"
                     Padding="16">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <Image Source="cabin_icon.png"
+                           Grid.ColumnSpan="2"
+                           Aspect="AspectFill"
+                           Opacity="0.14"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="-10,-8,-10,-8"
+                           InputTransparent="True"
+                           SemanticProperties.Description="Mökki ja mänty taustakuvio" />
+
                     <VerticalStackLayout Spacing="2">
                         <Label Text="Lapin Koti- ja Mökkiyhdistys ry"
                                FontSize="24"
@@ -51,14 +62,20 @@
                                TextColor="#5F7165" />
                     </VerticalStackLayout>
 
-                    <Image Grid.Column="1"
-                           Source="cabin_icon.png"
-                           HeightRequest="56"
-                           WidthRequest="56"
-                           Aspect="AspectFit"
-                           VerticalOptions="Center"
-                           HorizontalOptions="End"
-                           SemanticProperties.Description="Mökki ja mänty" />
+                    <Button Grid.Column="1"
+                            Text="Asetukset"
+                            Clicked="OnOpenSettingsClicked"
+                            BackgroundColor="#DDE8DD"
+                            TextColor="#1F5A3B"
+                            BorderColor="#2F6B4A"
+                            BorderWidth="1"
+                            CornerRadius="8"
+                            HeightRequest="36"
+                            FontSize="13"
+                            Padding="12,0"
+                            VerticalOptions="Start"
+                            HorizontalOptions="End"
+                            SemanticProperties.Hint="Avaa ylläpidon asetukset" />
                 </Grid>
             </Border>
 
@@ -102,7 +119,7 @@
                    TextColor="#1F5A3B"/>
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="ALV (25,5 %)" TextColor="#1F5A3B"/>
+                            <Label x:Name="VatCaptionLabel" TextColor="#1F5A3B"/>
                             <Label x:Name="VatValueLabel"
                    Grid.Column="1"
                    FontAttributes="Bold"
