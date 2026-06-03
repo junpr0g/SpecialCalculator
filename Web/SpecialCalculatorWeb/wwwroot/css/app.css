@@ -1,0 +1,163 @@
+/* Light theme (nature green) — matches MAUI AppColors.xaml */
+[data-theme="light"] {
+  --calc-page-bg: #F4F8F4;
+  --calc-card-bg: #FFFFFF;
+  --calc-card-alt-bg: #E8F0E8;
+  --calc-header-bg: #E8F0E8;
+  --calc-stroke: #CEDDCE;
+  --calc-accent-stroke: #2F6B4A;
+  --calc-primary-text: #1F5A3B;
+  --calc-secondary-text: #5F7165;
+  --calc-body-text: #2F4736;
+  --calc-input-text: #153D2B;
+  --calc-input-bg: #F7FBF7;
+  --calc-dropdown-bg: #F2F8F2;
+  --calc-button-bg: #DDE8DD;
+  --calc-placeholder: #90A39A;
+  --calc-dropdown-option-text: #0E3726;
+  --calc-total-band: #E8F0E8;
+  --calc-tab-bar-bg: #FFFFFF;
+  --calc-admin-tab-active-bg: #D4E4D4;
+  --calc-app-tab-active-bg: #D6E8F7;
+  --calc-app-tab-active-text: #1E4D72;
+  --calc-admin-panel-bg: #E8F0E8;
+  --calc-app-panel-bg: #E8F0FA;
+  --calc-admin-input-bg: #F7FBF7;
+  --calc-app-input-bg: #F5FAFF;
+  --calc-app-input-stroke: #93C5FD;
+  --calc-app-primary-text: #1E4D72;
+  --calc-app-body-text: #2F4A66;
+  --calc-app-picker-text: #1E3A5F;
+  --calc-primary-btn: #1F5A3B;
+  --calc-app-primary-btn: #2563EB;
+  --calc-error: #B42318;
+  --calc-success: #2F6B4A;
+  --calc-app-success: #2563EB;
+}
+
+/* Dark theme (dark green) */
+[data-theme="dark"] {
+  --calc-page-bg: #0B1410;
+  --calc-card-bg: #152820;
+  --calc-card-alt-bg: #1A3028;
+  --calc-header-bg: #13231C;
+  --calc-stroke: #2A4A3D;
+  --calc-accent-stroke: #4A9B6E;
+  --calc-primary-text: #C8E6D4;
+  --calc-secondary-text: #8FB5A0;
+  --calc-body-text: #A8C9B8;
+  --calc-input-text: #D4EDE0;
+  --calc-input-bg: #122019;
+  --calc-dropdown-bg: #1A2E26;
+  --calc-button-bg: #243D32;
+  --calc-placeholder: #6B8F7A;
+  --calc-dropdown-option-text: #D4EDE0;
+  --calc-total-band: #1F3D30;
+  --calc-tab-bar-bg: #152820;
+  --calc-admin-tab-active-bg: #2A4D3A;
+  --calc-app-tab-active-bg: #1E3A4F;
+  --calc-app-tab-active-text: #9BC5E8;
+  --calc-admin-panel-bg: #152820;
+  --calc-app-panel-bg: #142430;
+  --calc-admin-input-bg: #122019;
+  --calc-app-input-bg: #121E28;
+  --calc-app-input-stroke: #3D6A8C;
+  --calc-app-primary-text: #B8D4EC;
+  --calc-app-body-text: #8FAFC4;
+  --calc-app-picker-text: #C5DBEB;
+  --calc-primary-btn: #3D8B62;
+  --calc-app-primary-btn: #3B82F6;
+  --calc-error: #F87171;
+  --calc-success: #6BCF94;
+  --calc-app-success: #60A5FA;
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--calc-page-bg);
+  color: var(--calc-primary-text);
+  min-height: 100dvh;
+}
+
+#app {
+  position: relative;
+  min-height: 100dvh;
+}
+
+.loading-progress {
+  position: absolute;
+  display: block;
+  width: 8rem;
+  height: 8rem;
+  inset: 0;
+  margin: auto;
+}
+
+.loading-progress circle {
+  fill: none;
+  stroke: var(--calc-stroke);
+  stroke-width: 0.6rem;
+  transform-origin: 50% 50%;
+  transform: rotate(-90deg);
+}
+
+.loading-progress circle:last-child {
+  stroke: var(--calc-accent-stroke);
+  stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+  transition: stroke-dasharray 0.05s ease-in-out;
+}
+
+.loading-progress-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 9.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--calc-secondary-text);
+}
+
+.loading-progress-text:after {
+  content: var(--blazor-load-percentage-text, "Loading");
+}
+
+#blazor-error-ui {
+  background: #b32121;
+  color: white;
+  bottom: 0;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.2);
+  display: none;
+  left: 0;
+  padding: 0.6rem 1.25rem;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+  cursor: pointer;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.5rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+  outline: 1px solid var(--calc-success);
+}
+
+.invalid {
+  outline: 1px solid var(--calc-error);
+}
+
+.validation-message {
+  color: var(--calc-error);
+}
