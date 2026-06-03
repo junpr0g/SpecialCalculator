@@ -105,8 +105,8 @@
                     <select class="h-11 w-full bg-transparent text-[15px] text-calc-app-picker focus:outline-none"
                             @bind="_languageIndex"
                             @bind:after="ApplyLanguageAsync">
-                        <option value="0">@Localization.T("language_fi")</option>
-                        <option value="1">@Localization.T("language_en")</option>
+                        <option value="0" style="color:#5f7fb3">@Localization.T("language_fi")</option>
+                        <option value="1" style="color:#5f7fb3">@Localization.T("language_en")</option>
                     </select>
                 </div>
 
@@ -115,8 +115,8 @@
                     <select class="h-11 w-full bg-transparent text-[15px] text-calc-app-picker focus:outline-none"
                             @bind="_themeIndex"
                             @bind:after="ApplyThemeAsync">
-                        <option value="0">@Localization.T("theme_light")</option>
-                        <option value="1">@Localization.T("theme_dark")</option>
+                        <option value="0" style="color:#5f7fb3">@Localization.T("theme_light")</option>
+                        <option value="1" style="color:#5f7fb3">@Localization.T("theme_dark")</option>
                     </select>
                 </div>
             </div>
