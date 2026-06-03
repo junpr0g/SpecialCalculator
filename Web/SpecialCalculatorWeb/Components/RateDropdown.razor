@@ -1,0 +1,50 @@
+@inject LocalizationService Localization
+
+<div class="relative" @onclick:stopPropagation="true">
+    <button type="button"
+            class="calc-input-border flex h-11 w-full cursor-pointer items-center px-2.5"
+            @onclick="Toggle">
+        <span class="flex-1 truncate text-left text-[15px] text-calc-input">@SelectedLabel</span>
+        <span class="ml-2 text-xs text-calc-accent">▼</span>
+    </button>
+
+    @if (IsOpen)
+    {
+        <div class="absolute left-0 right-0 top-full z-20 -mx-2.5 mt-0 border border-calc-accent bg-calc-dropdown shadow-lg">
+            @foreach (RateItem rate in Rates)
+            {
+                <button type="button"
+                        class="flex h-11 w-full items-center px-3.5 text-left text-sm text-calc-dropdown-option hover:bg-calc-button"
+                        @onclick="() => Select(rate)">
+                    @FormatLabel(rate)
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public IReadOnlyList<RateItem> Rates { get; set; } = [];
+    [Parameter] public string Unit { get; set; } = "h";
+    [Parameter] public RateItem? Selected { get; set; }
+    [Parameter] public EventCallback<RateItem> SelectedChanged { get; set; }
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+
+    private string SelectedLabel =>
+        Selected is null ? string.Empty : FormatLabel(Selected);
+
+    private string FormatLabel(RateItem rate) =>
+        CalculatorEngine.FormatRateOptionLabel(rate, Unit, Localization);
+
+    private async Task Toggle()
+    {
+        await IsOpenChanged.InvokeAsync(!IsOpen);
+    }
+
+    private async Task Select(RateItem rate)
+    {
+        await SelectedChanged.InvokeAsync(rate);
+        await IsOpenChanged.InvokeAsync(false);
+    }
+}
