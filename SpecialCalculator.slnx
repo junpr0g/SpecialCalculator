@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/Web/">
-    <Project Path="Web/SpecialCalculatorWeb/SpecialCalculatorWeb.csproj" Id="e4c36f6b-7485-4041-8803-02e04d731e1d" />
+    <Project Path="../SpecialCalculatorWeb/SpecialCalculatorWeb.csproj" Id="e4c36f6b-7485-4041-8803-02e04d731e1d" />
   </Folder>
   <Project Path="SpecialCalculator.csproj">
     <Deploy Solution="Debug|*" />
