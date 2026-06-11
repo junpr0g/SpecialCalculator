@@ -13,9 +13,11 @@ public partial class SettingsPage : ContentPage
     private readonly Dictionary<string, Entry> _mileageEntries = [];
 
     private CalculatorSettings _settings = CalculatorSettingsStore.Clone(CalculatorSettingsStore.Defaults);
-    private bool _suppressCarouselSync;
-    private bool _carouselInitialized;
+    private bool _panelsInitialized;
+    private int _selectedTabIndex = AdminTabIndex;
 
+    private ScrollView? _adminPanel;
+    private ScrollView? _appPanel;
     private Entry? _vatSettingsEntry;
     private Label? _adminStatusLabel;
     private Picker? _languagePicker;
@@ -34,7 +36,7 @@ public partial class SettingsPage : ContentPage
         base.OnAppearing();
         AppThemeService.ThemeChanged += OnAppThemeChanged;
         AppThemeService.ApplySavedTheme();
-        RebuildCarousel();
+        RebuildPanels();
     }
 
     protected override void OnDisappearing()
@@ -45,49 +47,42 @@ public partial class SettingsPage : ContentPage
 
     private void OnAppThemeChanged(object? sender, EventArgs e)
     {
-        MainThread.BeginInvokeOnMainThread(RebuildCarousel);
+        MainThread.BeginInvokeOnMainThread(RebuildPanels);
     }
 
-    private void RebuildCarousel()
+    private void RebuildPanels()
     {
-        int position = _carouselInitialized ? SettingsCarousel.Position : AdminTabIndex;
-        _carouselInitialized = false;
+        int position = _panelsInitialized ? _selectedTabIndex : AdminTabIndex;
+        _panelsInitialized = false;
+        _adminPanel = null;
+        _appPanel = null;
         _vatSettingsEntry = null;
         _adminStatusLabel = null;
         _languagePicker = null;
         _themePicker = null;
         _notificationsSwitch = null;
         _appStatusLabel = null;
-        SettingsCarousel.ItemsSource = null;
-        EnsureCarouselInitialized();
-        SettingsCarousel.Position = position;
+        SettingsContentHost.Children.Clear();
+        EnsurePanelsInitialized();
+        SelectTab(position);
         ApplyLocalization();
         _settings = CalculatorSettingsStore.Load();
         BuildAdminInputs();
         BuildAppPickers();
-        UpdateTabVisualState(position);
     }
 
-    private void EnsureCarouselInitialized()
+    private void EnsurePanelsInitialized()
     {
-        if (_carouselInitialized)
+        if (_panelsInitialized)
         {
             return;
         }
 
-        SettingsCarousel.ItemTemplate = new DataTemplate(() =>
-        {
-            ContentView host = new();
-            host.SetBinding(ContentView.ContentProperty, ".");
-            return host;
-        });
-        SettingsCarousel.ItemsSource = new List<View>
-        {
-            CreateAdminPanel(),
-            CreateAppPanel()
-        };
-        SettingsCarousel.Position = AdminTabIndex;
-        _carouselInitialized = true;
+        _adminPanel = CreateAdminPanel();
+        _appPanel = CreateAppPanel();
+        SettingsContentHost.Children.Add(_adminPanel);
+        SettingsContentHost.Children.Add(_appPanel);
+        _panelsInitialized = true;
     }
 
     private ScrollView CreateAdminPanel()
@@ -319,29 +314,18 @@ public partial class SettingsPage : ContentPage
 
     private void OnAppTabClicked(object? sender, EventArgs e) => SelectTab(AppTabIndex);
 
-    private void OnCarouselPositionChanged(object? sender, PositionChangedEventArgs e)
-    {
-        if (_suppressCarouselSync)
-        {
-            return;
-        }
-
-        UpdateTabVisualState(e.CurrentPosition);
-    }
-
     private void SelectTab(int index)
     {
-        EnsureCarouselInitialized();
+        EnsurePanelsInitialized();
 
-        if (SettingsCarousel.Position == index)
+        if (_adminPanel is null || _appPanel is null)
         {
-            UpdateTabVisualState(index);
             return;
         }
 
-        _suppressCarouselSync = true;
-        SettingsCarousel.Position = index;
-        _suppressCarouselSync = false;
+        _selectedTabIndex = index;
+        _adminPanel.IsVisible = index == AdminTabIndex;
+        _appPanel.IsVisible = index == AppTabIndex;
         UpdateTabVisualState(index);
     }
 

@@ -36,11 +36,7 @@
             </Grid>
         </Border>
 
-        <CarouselView x:Name="SettingsCarousel"
-                      Grid.Row="1"
-                      Loop="False"
-                      IsSwipeEnabled="True"
-                      PeekAreaInsets="0,0,0,0"
-                      PositionChanged="OnCarouselPositionChanged" />
+        <Grid x:Name="SettingsContentHost"
+              Grid.Row="1" />
     </Grid>
 </ContentPage>

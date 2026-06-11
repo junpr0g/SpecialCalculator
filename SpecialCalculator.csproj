@@ -70,4 +70,12 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 	</ItemGroup>
 
+	<!-- Blazor WASM lives under Web/; keep it out of the MAUI compile graph -->
+	<ItemGroup>
+		<Compile Remove="Web/**" />
+		<Content Remove="Web/**" />
+		<None Remove="Web/**" />
+		<EmbeddedResource Remove="Web/**" />
+	</ItemGroup>
+
 </Project>
