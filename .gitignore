@@ -365,3 +365,8 @@ FodyWeavers.xsd
 # Web project tooling
 Web/**/node_modules/
 Web/**/tailwindcss.exe
+
+# Android release artifacts
+dist/
+*.keystore
+SpecialCalculator.AndroidSigning.props
