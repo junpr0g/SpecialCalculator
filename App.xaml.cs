@@ -7,6 +7,7 @@ namespace SpecialCalculator
         public App()
         {
             InitializeComponent();
+            AppThemeService.ApplySavedTheme();
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

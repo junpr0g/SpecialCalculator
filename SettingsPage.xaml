@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpecialCalculator.SettingsPage"
+             Title="Asetukset"
+             BackgroundColor="{DynamicResource CalcPageBackground}">
+    <Grid Padding="16"
+          RowDefinitions="Auto,*"
+          RowSpacing="12">
+        <Border Grid.Row="0"
+                x:Name="TabBarBorder"
+                BackgroundColor="{DynamicResource CalcTabBarBackground}"
+                Stroke="{DynamicResource CalcStroke}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 14"
+                Padding="4">
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="4">
+                <Button x:Name="AdminTabButton"
+                        Text="Administraattori"
+                        Clicked="OnAdminTabClicked"
+                        CornerRadius="8"
+                        BorderWidth="0"
+                        FontSize="13"
+                        HeightRequest="40"
+                        Padding="8,0" />
+                <Button x:Name="AppTabButton"
+                        Grid.Column="1"
+                        Text="Yleiset asetukset"
+                        Clicked="OnAppTabClicked"
+                        CornerRadius="8"
+                        BorderWidth="0"
+                        FontSize="13"
+                        HeightRequest="40"
+                        Padding="8,0" />
+            </Grid>
+        </Border>
+
+        <Grid x:Name="SettingsContentHost"
+              Grid.Row="1" />
+    </Grid>
+</ContentPage>

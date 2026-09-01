@@ -1,0 +1,21 @@
+<Project>
+  <!--
+    Copy to SpecialCalculator.AndroidSigning.props and fill in passwords.
+    Generate keystore once (from repo root):
+
+    keytool -genkeypair -v ^
+      -keystore Platforms\Android\release.keystore ^
+      -alias specialcalculator ^
+      -keyalg RSA -keysize 2048 -validity 10000 ^
+      -storepass YOUR_STORE_PASSWORD ^
+      -keypass YOUR_KEY_PASSWORD ^
+      -dname "CN=Palvelulaskuri, OU=Mobile, O=Lapin Koti- ja Mokkiyhdistys, C=FI"
+  -->
+  <PropertyGroup>
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>Platforms\Android\release.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>specialcalculator</AndroidSigningKeyAlias>
+    <AndroidSigningStorePass>YOUR_STORE_PASSWORD</AndroidSigningStorePass>
+    <AndroidSigningKeyPass>YOUR_KEY_PASSWORD</AndroidSigningKeyPass>
+  </PropertyGroup>
+</Project>
